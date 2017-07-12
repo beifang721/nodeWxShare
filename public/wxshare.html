@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="0">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #btn{
+            background-color: #04be02;
+            color: #FFFFFF;
+            display: inline-block;
+             height: 100px;
+            width: 100%;
+            font-size:1.8rem;
+        }
+    </style>
+</head>
+<body>
+<button id="btn">分享</button>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    console.log(location.href.split('#')[0]);
+    var sharbtn = document.getElementById("btn");
+    $.ajax({
+        url: 'http://192.168.0.107:1397',
+        type: 'get',
+        data: {
+            url: location.href.split('#')[0] // 将当前URL地址上传至服务器用于产生数字签名
+        }
+    }).done(function(r) {
+        // 返回了数字签名对象
+        console.log(r);
+        console.log(r.appId);
+        console.log(r.timestamp);
+        console.log(r.nonceStr);
+        console.log(r.signature);
+
+        // 开始配置微信JS-SDK
+        wx.config({
+
+            debug: true,
+            appId: r.appId,
+            timestamp: r.timestamp,
+            nonceStr: r.nonceStr,
+            signature: r.signature,
+            jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'hideMenuItems',
+                'chooseImage'
+            ]
+        });
+
+        // 调用微信API
+        wx.ready(function() {
+                wx.onMenuShareTimeline({
+                    title: '分享测试', // 分享标题
+                    link: 'http://test.html.huanbay.com/wx-jssdk-node/public/wxshare.html', // 分享链接
+                    imgUrl: 'http://cdn.duitang.com/uploads/item/201209/24/20120924114241_kzMRf.thumb.700_0.jpeg', // 分享图标
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                        alert("分享成功");
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        alert("取消分享");
+                    }
+                });
+                wx.onMenuShareAppMessage({
+                    title: '分享测试', // 分享标题
+                    desc: '', // 分享描述
+                    link: 'http://test.html.huanbay.com/wx-jssdk-node/public/wxshare.html', // 分享链接
+                    imgUrl: 'http://cdn.duitang.com/uploads/item/201209/24/20120924114241_kzMRf.thumb.700_0.jpeg', // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+        });
+
+    });
+</script>
+</body>
+</html>

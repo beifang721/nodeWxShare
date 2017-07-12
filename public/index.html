@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		$.ajax({
+			type:"get",
+			url:"http://test.html.huanbay.com/wx-jssdk-node/s.js",
+			data:'',
+			contentType:"Application/Json",
+			dataType: 'json',
+			success:function(data) {
+				console.log(data)
+			},
+			error:function (xhr){
+				//alert("服务器请求超时")
+			}
+		});
+		
+	</script>
+</html>
